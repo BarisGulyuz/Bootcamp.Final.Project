@@ -1,0 +1,128 @@
+﻿@model IEnumerable<CategoryGetDto>
+@{
+    ViewData["Title"] = "Kategoriler";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+@{
+    string name = ViewBag.Name ?? "";
+}
+
+<div id="modal-section">
+</div>
+
+<div class="container-fluid mt-5">
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h5 class="m-0 font-weight-bold text-primary text-center text-center mb-3 border-bottom-primary">Kategoriler</h5>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Admin</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Kategoriler</li>
+                </ol>
+            </nav>
+            <div class="d-flex justify-content-between align-items-center p-2">
+                <form method="get">
+                    <div class="input-group">
+                        <input type="text" name="name" class="form-control bg-light small" placeholder="Aramak için kullan.." value="@name">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="submit">
+                                <i class="fas fa-search fa-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                <div class="buttons">
+                    <a id="btn-category-add" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Yeni Ekle</a>
+                </div>
+            </div>
+            @if (Model.Count() > 0)
+            {
+                <div class="table-responsive">
+                    <table class="table table-bordered" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Kategori Adı</th>
+                                <th>Kategori Açıklama</th>
+                                <th>Kayıt Tarihi</th>
+                                <th>Düzenleme Tarihi</th>
+                                <th>Durum</th>
+                                <th colspan="1">İşlemler</th>
+                            </tr>
+
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.Id</td>
+                                    <td>@item.Name</td>
+                                    <td>@item.Description</td>
+                                    <td>@item.CreatedDate.ToShortDateString()</td>
+                                    <td>@item.ModifiedDate.ToShortDateString()</td>
+                                    <td>
+                                        <status status="@item.Status"></status>
+                                    </td>
+                                    <td>
+                                        <action-buttons status="@item.Status" activate-button-url="/Admin/Category/Activate?categoryId=@item.Id" delete-button-url="/Admin/Category/Delete?categoryId=@item.Id"
+                                                        edit-button-url="/Admin/Category/Edit?categoryId=@item.Id"></action-buttons>
+                                    </td>
+                                </tr>
+                            }
+                        </thead>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-danger d-flex flex-column justify-content-center align-items-center">
+                    <h6> Sonuç Bulunamadı </h6>
+                    <a href="/Admin/Category" class="btn btn-light">Geri Dön</a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+@section script{
+
+    <script>
+
+        function confirmDelete() {
+            return confirm('Silmek İstediğine Emin Misin?')
+        }
+
+        const modalDiv = $('#modal-section')
+        const url = '/Admin/Category/Add'
+
+        $('#btn-category-add').click(function () {
+            $.get(url).done(function (data) {
+                modalDiv.html(data)
+                modalDiv.find(".modal").modal('show')
+                $('#validation-div').hide()
+            })
+        })
+
+        modalDiv.on('click', '#btnSave', () => {
+            const form = $('#category-add-form')
+            const actionUrl = form.attr('action')
+            const dataToSend = form.serialize()
+            console.log(dataToSend)
+            $.post(actionUrl, dataToSend).done((result) => {
+                console.log(dataToSend)
+                if (result.isValid === false) {
+                    $('#validation-div').empty()
+                    result.errors.forEach(error => {
+                        $('#validation-div').append(`<p> ${error.errorMessage} </p>`)
+                    })
+                    $('#validation-div').slideDown()
+                    return;
+                }
+                window.location.reload()
+            })
+        })
+
+    </script>
+
+}
+

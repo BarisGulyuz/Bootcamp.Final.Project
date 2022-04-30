@@ -1,0 +1,141 @@
+﻿@model IEnumerable<ShoppingCartItemGetDto>
+@{
+    ViewData["Title"] = "Sepetim";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<div class="container mt-5">
+    <div class="row">
+        <div id="options" class="col-md-4">
+            @await Html.PartialAsync("_LeftOptionsBarPartial")
+        </div>
+        <div class="col-md-8">
+            <div class="d-flex justify-content-center align-items-center mb-2">
+                <h5 class="text-center"> <span class="text-decoration-underline me-3"> "@Model.Select(x => x.ShoppingCart).Select(x => x.Title).FirstOrDefault()" </span>Listenize Ait Ürünler </h5>
+            </div>
+            <hr />
+            @if (Model.Count() > 0)
+            {
+                <div class="table-responsive  shadow bg-white  p-5">
+                    <form method="post">
+                        <input onclick="return confirm('Silmek İstediğine Emin Misin?')" class="btn btn-outline-danger mb-2" type="submit" asp-action="DeleteAllItems" asp-route-cartId="@Model.Select(x=> x.ShoppingCartId).FirstOrDefault()" value="Listeyi Temizle" />
+                    </form>
+                    <button class="btn btn-light float-end" type="button" onclick="generatePdf()" value="Export To PDF">  <i class="fas fa-file-pdf me-2 mb-2" style="color:red; font-size:18px;"></i></button>
+                    <a class="btn btn-light float-end" asp-action="ExcelReport" asp-route-cartId="@Model.Select(x=> x.ShoppingCartId).FirstOrDefault()">  <i class="fas fa-file-excel mx-2 mb-2" style="color: green; font-size: 18px"></i></a>
+                    <table id="item-list" class="table table-hover">
+                        <tr>
+                            <th>Ürün Adı</th>
+                            <th>Not</th>
+                            <th>İşlemler</th>
+                        </tr>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.Product.Name</td>
+                                    <td>
+                                        @if (string.IsNullOrEmpty(item.Note))
+                                        {
+                                            <span class="badge bg-warning">Not Yok</span>
+                                        }
+                                        else
+                                        {
+                                            @item.Note;
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.ShoppingCart.IsShoppingStarted == false)
+                                        {
+                                            <form method="post">
+                                                <button class="btn btn-danger btn-sm" asp-action="DeleteCartItem" asp-route-cartId="@item.ShoppingCart.Id"
+                                                        asp-route-cartItemId="@item.Id" onclick="return confirm('Silmek İstediğine Emin Misin?')">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+
+                                        }
+                                        else
+                                        {
+                                            <form method="post">
+                                                @if (item.Status == true)
+                                                {
+                                                    <button class="btn btn-outline-success btn-sm" asp-action="SetCartItemStatus" asp-route-cartId="@item.ShoppingCart.Id" asp-route-status="@item.Status" asp-route-cartItemId="@item.Id"> Sepete Ekledim </button>
+                                                }
+                                                else
+                                                {
+                                                    <button class="btn btn-outline-danger btn-sm" asp-action="SetCartItemStatus" asp-route-cartId="@item.ShoppingCart.Id" asp-route-status="@item.Status" asp-route-cartItemId="@item.Id"> Sepetten Çıkardım </button>
+                                                }
+                                            </form>
+
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-danger">
+                    Listenizde henüz ürün mevcut değil.
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+@section script{
+    <script>
+        function generatePdf() {
+            var doc = new jsPDF('p', 'pt', 'letter');
+            pageHeight = doc.internal.pageSize.height;
+            specialElementHandlers = {
+                // element with id of "bypass" - jQuery style selector
+                '#bypassme': function (element, renderer) {
+                    // true = "handled elsewhere, bypass text extraction"
+                    return true
+                }
+            };
+            margins = {
+                top: 150,
+                bottom: 60,
+                left: 40,
+                right: 40,
+                width: 600
+            };
+            var y = 20;
+            doc.setLineWidth(2);
+            doc.text(200, y = y + 30, "ALISVERIS LISTEM");
+            doc.autoTable({
+                html: '#item-list',
+                startY: 70,
+                theme: 'grid',
+                columnStyles: {
+                    0: {
+                        cellWidth: 180,
+                    },
+                    1: {
+                        cellWidth: 180,
+                    },
+                    2: {
+                        cellWidth: 180,
+                    }
+                },
+                styles: {
+                    minCellHeight: 40
+                }
+            })
+            doc.save('Sepet.pdf');
+        }
+
+                            //function generateExcel(cartId) {
+                            //    $.get('/ShoppingCart/ExcelReport?cartId=' + cartId)
+                            //}
+    </script>
+}
+
+

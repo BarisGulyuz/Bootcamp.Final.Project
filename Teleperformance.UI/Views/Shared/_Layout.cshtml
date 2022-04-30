@@ -1,0 +1,66 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Teleperformance | Alışveriş Listem</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css"
+          integrity="sha512-GQGU0fMMi238uA+a/bdWJfpUGKUkBdgfFdgBm72SUQ6BeyWjoY/ton0tEjH+OSH9iP4Dfh+7HM0I9f5eR0L/4w=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+          integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="~/main.css">
+</head>
+
+<body>
+
+
+    <header class="d-flex justify-content-between py-3 bg-white shadow p-5">
+        <img src="data:image/png;base64,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"
+             alt="Teleperformance" width="130" height="50" style="object-fit:cover; cursor:pointer" />
+        <ul class="nav nav-pills">
+            <li class="nav-item"><a href="/Home/Index" class="nav-link active" aria-current="page"> <i class="fas fa-home me-2"></i> Anasayfa</a></li>
+            <li class="nav-item"><a href="#" class="nav-link"> <i class="fas fa-info-circle me-2"></i> Hakkımızda</a></li>
+            <li class="nav-item"><a href="#" class="nav-link"> <i class="fas fa-question-circle me-2"></i> Bize Ürün Öner</a></li>
+        </ul>
+        @if (User.Identity.IsAuthenticated)
+        {
+            <div class="d-flex justify-content-center align-items-center">
+                @if (User.IsInRole("Admin"))
+                {
+                    <a class="btn btn-outline-primary btn-sm d-flex justify-content-center align-items-center me-2" href="/Admin/Category"> <i class="fas fa-user me-2"></i> Admin Paneli</a>
+                }
+                <a id="exit-btn" class="btn btn-outline-danger btn-sm d-flex justify-content-center align-items-center" href="/Auth/Logout"> <i class="fas fa-arrow-alt-circle-right me-2"></i> Çıkış Yap</a>
+            </div>
+
+        }
+    </header>
+
+    <div class="container mt-5">
+        @RenderBody()
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.6/jspdf.plugin.autotable.min.js"></script>
+    <script src="~/script.js"></script>
+    @RenderSection("script", false)
+
+    <script>
+        $('#exit-btn').click(() => {
+            localStorage.removeItem('alert')
+        })
+    </script>
+
+</body>
+
+</html>

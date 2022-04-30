@@ -1,0 +1,141 @@
+﻿@model IEnumerable<ShoppingCartGetDto>
+@{
+    ViewData["Title"] = "Anasayfa";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="main-container" class="container mt-5">
+    <div class="row">
+        <div id="options" class="col-md-4">
+            @await Html.PartialAsync("_LeftOptionsBarPartial")
+        </div>
+        <div class="col-md-8">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <button id="dialog-button" class="btn btn-primary">
+                    <i class="fas fa-plus me-1"></i> Yeni Liste Oluştur
+                </button>
+            </div>
+            @if (Model.Count() > 0)
+            {
+                @foreach (var item in Model)
+                {
+                    <div class="card mb-2">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h5 class="card-title">@item.Title</h5>
+                                <form method="post">
+                                    <button class="btn btn-danger btn-sm" onclick="return confirm('Silmek İstediğine Emin Misin?')" asp-action="DeleteCart" asp-controller="ShoppingCart" asp-route-cartId="@item.Id"> <i class="fas fa-trash"></i> </button>
+                                </form>
+                            </div>
+                            <p class="card-text">
+                                Bu liste <strong>@item.CreatedDate.ToShortDateString() </strong>tarihinde oluşturuldu. Listede <strong>@item.ShoppingCartItems.Count</strong> adet ürün var
+                            </p>
+                            <hr />
+                            <a asp-controller="ShoppingCart" asp-action="GetListItems" asp-route-cartId="@item.Id" class="btn btn-warning btn-sm">Listeyi Gör</a>
+                            @if (item.IsShoppingStarted == false)
+                            {
+
+                                <a data-cartId="@item.Id" data-title="@item.Title" class="btn btn-primary btn-sm btnUpdateList">Listeye Ekle</a>
+                                <a asp-controller="ShoppingCart" asp-action="SetShoppingStatus" asp-route-cartId="@item.Id" class="btn btn-success btn-sm float-end">Alışverişe Çıkıyorum</a>
+
+                            }
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="alert alert-danger">
+                    Liste Bulunamadı...
+                </div>
+            }
+
+        </div>
+
+        <dialog data-list-id="0" id="dialog">
+            <button id="close-button" class="btn-close float-end"></button>
+            <div class="container p-4">
+                <div class="d-flex justify-content-between align-items-center mt-2">
+                    <h5 id="list-title">Liste Oluştur</h5>
+                    <input type="text" id="list-id" class="form-control form-control-sm w-50" placeholder="Liste Adı">
+                </div>
+                <hr>
+                <button id="search-button" class="btn btn-light mb-2">
+                    <i class="fas fa-search"></i>
+                </button>
+                <form id="search-form">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input id="product-name-search" type="text" class="form-control" placeholder="Ürün Adı">
+                        </div>
+                        <div class="col-md-6">
+                            <select class="form-control" asp-items="@ViewBag.Categories" id="category-list">
+                                <option value="0">Tümünü Seç</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+                <div class="table-responsive">
+                    <table id="product-list" class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Seç</th>
+                                <th>Görsel</th>
+                                <th>Kategori</th>
+                                <th>Ürün Adı</th>
+                                <th class="text-center">Not</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <button id="btnSave" class="btn btn-success btn-sm float-end">
+                        <i class="fas fa-save"></i>
+                        Kaydet
+                    </button>
+                </div>
+                <nav class="d-flex justify-content-center align-items-center">
+                    <ul class="pagination">
+                        <li class="page-item">
+                            <a id="prev-page" class="page-link" href="#" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                                <span class="sr-only">Önceki</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a id="next-page" class="page-link" href="#" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                                <span class="sr-only">Sonraki</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </dialog>
+
+    </div>
+</div>
+
+
+@section script{
+    <script>
+        sayWelcomeToUser('@User.Identity.Name')
+
+        let aTags = document.querySelectorAll('.list-group-item > a')
+
+        aTags.forEach(function (item) {
+
+            if (location.href === "https://localhost:44345/") {
+                $('#homeIndex').addClass('active')
+                return
+            }
+
+            if (window.location.href === item.href) {
+                item.classList.add('active')
+            }
+        })
+
+    </script>
+}
+
+

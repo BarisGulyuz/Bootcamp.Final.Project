@@ -1,0 +1,129 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+:root{
+    --color-success: #019267;
+    --color-error: #E74C3C;
+    --color-warning: #F39C12;
+    --color-info: #3498DB;
+}
+
+
+.bg-toastr{
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 14px 18px;
+    max-width: 350px;
+    min-width: 200px;
+    background-color: #F9F9F9;
+    box-shadow: 0 5px 10px rgb(0, 0, 0, 0.2);
+    opacity: 0.85;
+    border-radius: 12px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+
+}
+.bg-toastr a{
+    text-decoration: none;
+}
+.bg-toastr a i{
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    background-color: transparent !important;
+    color: red !important;
+    opacity: 0;
+    display: none;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.bg-toastr:hover{
+    opacity: 1 !important;
+    cursor: pointer;
+}
+
+.bg-toastr:hover a i{
+    opacity: 1;
+    display: block;
+}
+
+.bg-toastr.success{
+    border-left: 8px solid var(--color-success);
+}
+
+.bg-toastr.error{
+    border-left: 8px solid var(--color-error);
+}
+
+.bg-toastr.warning{
+    border-left: 8px solid var(--color-warning);
+}
+
+.bg-toastr.info{
+    border-left: 8px solid var(--color-info);
+}
+
+.bg-toastr>i{
+    display: flex;
+    align-items: center;
+    font-size: 15px;
+    color: #F9F9F9;
+    padding: 8px 12px;
+    border-radius: 50%;
+    
+}
+.success i{
+    padding: 8px 8px;
+    background-color: var(--color-success);
+}
+
+.error i{
+    background-color: var(--color-error);
+}
+
+.warning i{
+    background-color: var(--color-warning);
+}
+
+.info i{
+    background-color: var(--color-info);
+}
+
+
+.bg-toastr div{
+    display: flex;
+    flex-direction: column;
+    margin-left: 15px;
+}
+
+.bg-toastr.success{
+    border-left: 8px solid var(--color-success);
+}
+
+.bg-toastr span:nth-child(1){
+    font-size: 14px;
+    letter-spacing: 0.06rem;
+    font-weight: bold;
+}
+
+
+@media screen and (max-width: 768px){
+    .bg-toastr{
+        max-width: 70%;
+        right: 0;
+        left: 0;
+        margin: 0 auto;
+        padding: 10px;
+        border-radius: 15px;
+        font-size: 10px;
+    }
+}
+    
+
+
+
+
+
